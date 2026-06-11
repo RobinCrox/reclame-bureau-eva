@@ -18,6 +18,7 @@ from agents.agent4_tagline import run_tagline
 from agents.agent5_instagram import run_instagram
 from agents.agent6_email import run_email
 from agents.agent7_quality_check import run_quality_checker
+from agents.agent_researcher import run_researcher
 
 app = FastAPI(title="Marketing Campaign System")
 
@@ -52,16 +53,19 @@ async def run_campaign(request: CampaignRequest):
     # Step 3 — Brief Writer
     campaign_brief = await asyncio.to_thread(run_brief_writer, audience_profile, positioning_strategy)
 
-    # Steps 4, 5, 6 — run in parallel
+    # Step RAG — Researcher queries ChromaDB for relevant brand guidelines + past campaigns
+    rag_context = await asyncio.to_thread(run_researcher, campaign_brief)
+
+    # Steps 4, 5, 6 — run in parallel (4 and 6 use RAG context, 5 does not)
     taglines, instagram_post, email_copy = await asyncio.gather(
-        asyncio.to_thread(run_tagline, campaign_brief),
+        asyncio.to_thread(run_tagline,   campaign_brief, rag_context),
         asyncio.to_thread(run_instagram, campaign_brief),
-        asyncio.to_thread(run_email, campaign_brief),
+        asyncio.to_thread(run_email,     campaign_brief, rag_context),
     )
 
-    # Step 7 — Quality Check
+    # Step 7 — Quality Check (uses RAG context for brand guideline-aware review)
     review_report = await asyncio.to_thread(
-        run_quality_checker, campaign_brief, taglines, instagram_post, email_copy
+        run_quality_checker, campaign_brief, taglines, instagram_post, email_copy, rag_context
     )
 
     return {
