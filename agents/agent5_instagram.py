@@ -31,10 +31,20 @@ Rules:
 
 class InstagramState(TypedDict):
     campaign_brief: dict
+    rag_context: dict
     instagram_post: dict
 
 
 def generate_instagram(state: InstagramState) -> InstagramState:
+    context_block = ""
+    if state.get("rag_context"):
+        ctx = state["rag_context"]
+        guidelines = "\n\n".join(ctx.get("brand_guidelines", []))
+        campaigns = "\n\n".join(
+            f"- {c['title']}: {c['content']}" for c in ctx.get("similar_campaigns", [])
+        )
+        context_block = f"\n\nBRAND GUIDELINES (from knowledge base):\n{guidelines}\n\nSIMILAR PAST CAMPAIGNS:\n{campaigns}"
+
     response = client.messages.create(
         model="claude-sonnet-4-6",
         max_tokens=1024,
@@ -42,7 +52,7 @@ def generate_instagram(state: InstagramState) -> InstagramState:
         messages=[
             {
                 "role": "user",
-                "content": f"Write an Instagram post for this campaign:\n\n{json.dumps(state['campaign_brief'], indent=2)}",
+                "content": f"Write an Instagram post for this campaign:\n\n{json.dumps(state['campaign_brief'], indent=2)}{context_block}",
             }
         ],
     )
@@ -58,9 +68,9 @@ def build_instagram_graph():
     return graph.compile()
 
 
-def run_instagram(campaign_brief: dict) -> dict:
+def run_instagram(campaign_brief: dict, rag_context: dict = None) -> dict:
     agent = build_instagram_graph()
-    result = agent.invoke({"campaign_brief": campaign_brief, "instagram_post": {}})
+    result = agent.invoke({"campaign_brief": campaign_brief, "rag_context": rag_context or {}, "instagram_post": {}})
     return result["instagram_post"]
 
 

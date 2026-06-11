@@ -33,11 +33,21 @@ Always respond with valid JSON matching this exact structure:
 
 class StrategistState(TypedDict):
     audience_profile: dict
+    rag_context: dict
     positioning_strategy: dict
 
 
 def build_strategy(state: StrategistState) -> StrategistState:
     profile_text = json.dumps(state["audience_profile"], indent=2)
+
+    context_block = ""
+    if state.get("rag_context"):
+        ctx = state["rag_context"]
+        guidelines = "\n\n".join(ctx.get("brand_guidelines", []))
+        campaigns = "\n\n".join(
+            f"- {c['title']}: {c['content']}" for c in ctx.get("similar_campaigns", [])
+        )
+        context_block = f"\n\nBRAND GUIDELINES (follow these when defining tone and strategy):\n{guidelines}\n\nSIMILAR PAST CAMPAIGNS (use their learnings to inform the strategy):\n{campaigns}"
 
     response = client.messages.create(
         model="claude-sonnet-4-6",
@@ -46,7 +56,7 @@ def build_strategy(state: StrategistState) -> StrategistState:
         messages=[
             {
                 "role": "user",
-                "content": f"Create a positioning strategy for a product targeting this audience:\n\n{profile_text}",
+                "content": f"Create a positioning strategy for a product targeting this audience:\n\n{profile_text}{context_block}",
             }
         ],
     )
@@ -63,9 +73,9 @@ def build_strategist_graph() -> StateGraph:
     return graph.compile()
 
 
-def run_strategist(audience_profile: dict) -> dict:
+def run_strategist(audience_profile: dict, rag_context: dict = None) -> dict:
     agent = build_strategist_graph()
-    result = agent.invoke({"audience_profile": audience_profile, "positioning_strategy": {}})
+    result = agent.invoke({"audience_profile": audience_profile, "rag_context": rag_context or {}, "positioning_strategy": {}})
     return result["positioning_strategy"]
 
 

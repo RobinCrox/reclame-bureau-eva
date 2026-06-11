@@ -30,6 +30,7 @@ Always respond with valid JSON matching this exact structure:
 class BriefWriterState(TypedDict):
     audience_profile: dict
     positioning_strategy: dict
+    rag_context: dict
     campaign_brief: dict
 
 
@@ -40,6 +41,15 @@ def write_brief(state: BriefWriterState) -> BriefWriterState:
 POSITIONING STRATEGY:
 {json.dumps(state["positioning_strategy"], indent=2)}"""
 
+    context_block = ""
+    if state.get("rag_context"):
+        ctx = state["rag_context"]
+        guidelines = "\n\n".join(ctx.get("brand_guidelines", []))
+        campaigns = "\n\n".join(
+            f"- {c['title']}: {c['content']}" for c in ctx.get("similar_campaigns", [])
+        )
+        context_block = f"\n\nBRAND GUIDELINES (the brief must align with these):\n{guidelines}\n\nSIMILAR PAST CAMPAIGNS:\n{campaigns}"
+
     response = client.messages.create(
         model="claude-sonnet-4-6",
         max_tokens=4096,
@@ -47,7 +57,7 @@ POSITIONING STRATEGY:
         messages=[
             {
                 "role": "user",
-                "content": f"Write a campaign brief based on the following audience profile and positioning strategy:\n\n{context}",
+                "content": f"Write a campaign brief based on the following audience profile and positioning strategy:\n\n{context}{context_block}",
             }
         ],
     )
@@ -64,11 +74,12 @@ def build_brief_writer_graph() -> StateGraph:
     return graph.compile()
 
 
-def run_brief_writer(audience_profile: dict, positioning_strategy: dict) -> dict:
+def run_brief_writer(audience_profile: dict, positioning_strategy: dict, rag_context: dict = None) -> dict:
     agent = build_brief_writer_graph()
     result = agent.invoke({
         "audience_profile": audience_profile,
         "positioning_strategy": positioning_strategy,
+        "rag_context": rag_context or {},
         "campaign_brief": {}
     })
     return result["campaign_brief"]

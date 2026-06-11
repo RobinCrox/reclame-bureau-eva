@@ -1,7 +1,6 @@
-from typing import TypedDict
+from typing import TypedDict, Optional
 from langgraph.graph import StateGraph, END
 from dotenv import load_dotenv, find_dotenv
-import json
 import os
 
 from rag.indexer import index_all
@@ -14,12 +13,11 @@ CAMPAIGNS_COLLECTION = "example_campaigns"
 
 
 class ResearcherState(TypedDict):
-    campaign_brief: dict
+    query_text: str
     rag_context: dict
 
 
 def _build_search_query(brief: dict) -> str:
-    """Derive a focused search query from the campaign brief."""
     parts = []
     if brief.get("campaign_objective"):
         parts.append(brief["campaign_objective"])
@@ -33,7 +31,7 @@ def _build_search_query(brief: dict) -> str:
 def retrieve_context(state: ResearcherState) -> ResearcherState:
     index_all()
 
-    query_text = _build_search_query(state["campaign_brief"])
+    query_text = state["query_text"]
 
     guideline_hits = query(GUIDELINES_COLLECTION, query_text, n_results=3)
     campaign_hits = query(CAMPAIGNS_COLLECTION, query_text, n_results=2)
@@ -61,10 +59,16 @@ def build_researcher_graph() -> StateGraph:
     return graph.compile()
 
 
-def run_researcher(campaign_brief: dict) -> dict:
+def run_researcher(query_text: str) -> dict:
+    """Query ChromaDB with any text string and return RAG context."""
     agent = build_researcher_graph()
-    result = agent.invoke({"campaign_brief": campaign_brief, "rag_context": {}})
+    result = agent.invoke({"query_text": query_text, "rag_context": {}})
     return result["rag_context"]
+
+
+def run_researcher_from_brief(campaign_brief: dict) -> dict:
+    """Convenience wrapper that derives the query from a campaign brief dict."""
+    return run_researcher(_build_search_query(campaign_brief))
 
 
 if __name__ == "__main__":
@@ -74,7 +78,7 @@ if __name__ == "__main__":
         from sample_brief import SAMPLE_BRIEF
 
     print("Running Researcher agent...\n")
-    context = run_researcher(SAMPLE_BRIEF)
+    context = run_researcher_from_brief(SAMPLE_BRIEF)
     print("--- Brand Guidelines (top 3 chunks) ---")
     for i, chunk in enumerate(context["brand_guidelines"], 1):
         print(f"\n[{i}] {chunk[:300]}...")

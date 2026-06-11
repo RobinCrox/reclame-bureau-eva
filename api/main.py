@@ -44,26 +44,27 @@ async def run_campaign(request: CampaignRequest):
     if not request.product_description.strip():
         raise HTTPException(status_code=400, detail="product_description cannot be empty")
 
-    # Step 1 — Audience & Market Analyst
+    # Step 1 — Audience & Market Analyst (no RAG — pure market research)
     audience_profile = await asyncio.to_thread(run_analyst, request.product_description)
 
-    # Step 2 — Positioning Strategist
-    positioning_strategy = await asyncio.to_thread(run_strategist, audience_profile)
+    # Step RAG — run researcher right after analyst using product description as query
+    # Context is shared across all downstream agents
+    rag_context = await asyncio.to_thread(run_researcher, request.product_description)
 
-    # Step 3 — Brief Writer
-    campaign_brief = await asyncio.to_thread(run_brief_writer, audience_profile, positioning_strategy)
+    # Step 2 — Positioning Strategist (uses brand guidelines + past campaign strategies)
+    positioning_strategy = await asyncio.to_thread(run_strategist, audience_profile, rag_context)
 
-    # Step RAG — Researcher queries ChromaDB for relevant brand guidelines + past campaigns
-    rag_context = await asyncio.to_thread(run_researcher, campaign_brief)
+    # Step 3 — Brief Writer (brief must align with brand guidelines)
+    campaign_brief = await asyncio.to_thread(run_brief_writer, audience_profile, positioning_strategy, rag_context)
 
-    # Steps 4, 5, 6 — run in parallel (4 and 6 use RAG context, 5 does not)
+    # Steps 4, 5, 6 — run in parallel (all use RAG context)
     taglines, instagram_post, email_copy = await asyncio.gather(
         asyncio.to_thread(run_tagline,   campaign_brief, rag_context),
-        asyncio.to_thread(run_instagram, campaign_brief),
+        asyncio.to_thread(run_instagram, campaign_brief, rag_context),
         asyncio.to_thread(run_email,     campaign_brief, rag_context),
     )
 
-    # Step 7 — Quality Check (uses RAG context for brand guideline-aware review)
+    # Step 7 — Quality Check (uses brand guidelines as review standard)
     review_report = await asyncio.to_thread(
         run_quality_checker, campaign_brief, taglines, instagram_post, email_copy, rag_context
     )
