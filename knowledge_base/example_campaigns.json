@@ -1,0 +1,87 @@
+[
+  {
+    "id": "camp_001",
+    "title": "Rootly — 'Grown With Intent' Launch Campaign",
+    "industry": "food & beverage / sustainability",
+    "objective": "Drive DTC subscription sign-ups for a regenerative ingredient delivery brand among health-conscious urban professionals.",
+    "audience": "Urban professionals 30–45, educated, income €60k+. Values: provenance, sustainability, slow food. Skeptical of greenwashing.",
+    "tagline": "Food grown with intent. Delivered with proof.",
+    "tone": "Quiet confidence. Sensory and specific. Never preachy.",
+    "key_messages": [
+      "Every ingredient comes with a full soil-to-shelf story.",
+      "Regenerative farming restores the land — here's the data to prove it.",
+      "This isn't meal prep. It's a weekly ritual worth looking forward to."
+    ],
+    "channels": ["Instagram", "email nurture sequence", "food blogger partnerships"],
+    "results": "34% sign-up lift in 60 days. Email open rate 42% (industry avg 21%). Instagram saves-to-reach ratio 8.3%.",
+    "learnings": "Specificity outperformed aspiration 2:1 in A/B tests. Posts naming the actual farm performed 3x better than generic 'farm to table' messaging. Sustainability stats with sources drove significantly more link clicks than claims alone."
+  },
+  {
+    "id": "camp_002",
+    "title": "Bouwspot — 'Built Different' B2B Brand Campaign",
+    "industry": "construction technology / SaaS",
+    "objective": "Reposition a construction project management platform from 'tool' to 'strategic advantage' among mid-market contractors.",
+    "audience": "Construction company owners and project managers, 35–55. Pragmatic, skeptical of tech promises, time-poor. Motivated by avoiding costly delays and protecting margin.",
+    "tagline": "Built different. Built to last.",
+    "tone": "Direct, no-nonsense. Peer-to-peer. Trade language where appropriate.",
+    "key_messages": [
+      "Most project delays are preventable. Here's how the data proves it.",
+      "Built for the way contractors actually work — not how consultants think they should.",
+      "Your competitors are already on it."
+    ],
+    "channels": ["LinkedIn", "trade publication display", "industry podcast sponsorship", "direct email to decision-makers"],
+    "results": "Pipeline grew 28% in Q1. Demo requests up 61% after LinkedIn campaign. Trade publication CTR 4.2% (avg 0.9%).",
+    "learnings": "Loss aversion messaging ('your competitors are already using this') outperformed gain-framing. Concrete numbers ('reduces rework costs by 18% on average') beat general efficiency claims. Decision-makers responded to peer validation over vendor authority."
+  },
+  {
+    "id": "camp_003",
+    "title": "Veldt Running — 'Run Your Own Race' Performance Campaign",
+    "industry": "sportswear / DTC",
+    "objective": "Launch a new trail running shoe line among serious hobby runners. Drive awareness and first purchase.",
+    "audience": "Dedicated hobby runners 28–42. Run 3–5x/week. Buy based on performance, not brand. Read running forums and trust community reviews over advertising.",
+    "tagline": "Run your own race.",
+    "tone": "Earned, not aspirational. Peer-level authority. Dry humour welcome.",
+    "key_messages": [
+      "Designed for runners who already know what they want.",
+      "Every material choice has a reason. Here's the full breakdown.",
+      "Community-tested over 18 months before we put our name on it."
+    ],
+    "channels": ["Strava sponsored segments", "running subreddit AMAs", "YouTube gear reviews", "trail running newsletter sponsorships"],
+    "results": "Sold out first production run in 11 days. 94% of first-time buyers cited 'community trust' as primary reason. Reddit AMA generated 2,400 comments and 180 direct purchases.",
+    "learnings": "This audience actively distrusts paid advertising. Authentic community presence (AMA, forum participation) significantly outperformed display ads. Transparency about product development process built more trust than polished marketing copy. Giving genuine technical information treated the audience as intelligent adults."
+  },
+  {
+    "id": "camp_004",
+    "title": "Maison Duval — 'The Long Way Round' Wine Brand Story",
+    "industry": "premium food & beverage",
+    "objective": "Build brand awareness and email list for a small-batch natural wine importer targeting millennial wine buyers.",
+    "audience": "Millennial wine explorers 26–38. Interested in natural wine, orange wine, low-intervention producers. Motivated by story, discovery, and the thrill of finding something unknown.",
+    "tagline": "Wine for the curious.",
+    "tone": "Knowledgeable but approachable. Never snobby. Celebrates the weird and unexpected.",
+    "key_messages": [
+      "The wines nobody's heard of yet — and why that's exactly the point.",
+      "Every producer we work with has a story worth telling over a glass.",
+      "Natural wine shouldn't need a decoder ring. We'll walk you through it."
+    ],
+    "channels": ["Instagram", "Substack newsletter", "podcast sponsorships (food + culture)", "wine bar partnerships"],
+    "results": "Newsletter grew from 800 to 11,400 subscribers in 6 months. Instagram engagement rate 6.8%. Average order value 24% above category benchmark.",
+    "learnings": "Long-form content dramatically outperformed short posts for this audience. Storytelling about the producers (not the wine technical specs) drove the most shares. The newsletter became the highest-converting channel — better than paid social by a factor of 4."
+  },
+  {
+    "id": "camp_005",
+    "title": "Helder Bank — 'Nothing to Hide' Fintech Trust Campaign",
+    "industry": "fintech / banking",
+    "objective": "Drive account sign-ups for a challenger bank by differentiating on radical fee transparency against incumbent banks.",
+    "audience": "Adults 22–40 frustrated with hidden bank fees and opaque financial products. Tech-comfortable. Value fairness and clarity over prestige.",
+    "tagline": "Nothing to hide. Everything to gain.",
+    "tone": "Direct and honest, with a touch of righteous anger about the status quo. Not aggressive.",
+    "key_messages": [
+      "We list every fee on one page. Try that with your current bank.",
+      "No fine print. No exceptions. No surprises.",
+      "Banking that explains itself."
+    ],
+    "channels": ["YouTube pre-roll", "Reddit finance communities", "personal finance podcasts", "comparison site partnerships"],
+    "results": "22,000 new accounts in first 90 days. NPS of 74 (industry avg 18). YouTube 'fee comparison' video reached 1.2M views organically.",
+    "learnings": "Direct comparison to incumbent bank practices was highly effective but required careful legal review. Audiences responded strongly to the 'fee breakdown' creative format — showing actual numbers. Transparency as a brand value needs to be demonstrated, not just claimed."
+  }
+]
